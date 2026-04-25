@@ -1,0 +1,137 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaDemo.ViewModels"
+        xmlns:models="using:AvaloniaDemo.Models"
+        xmlns:controls="using:AvaloniaDemo.Controls"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="750"
+        x:Class="AvaloniaDemo.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="AvaloniaDemo — UI Scaffold"
+        Width="1200" Height="750"
+        MinWidth="800" MinHeight="500">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <!-- Root layout: Toolbar / Main content / Bottom panel -->
+    <Grid RowDefinitions="Auto,*,180">
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!--  ROW 0 — Toolbar                                    -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <Border Grid.Row="0"
+                Background="#1E2028"
+                BorderBrush="#3A3D4A"
+                BorderThickness="0,0,0,1"
+                Padding="6,4">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Button Content="Open Workspace" Padding="10,5"/>
+                <Button Content="Scan"            Padding="10,5"/>
+                <Button Content="Run"             Padding="10,5"/>
+                <Button Content="Replay Logs"     Padding="10,5"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!--  ROW 1 — Main content: Left | Canvas | Right        -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <Grid Grid.Row="1" ColumnDefinitions="250,*,300">
+
+            <!-- Left panel — component tree -->
+            <Border Grid.Column="0"
+                    Background="#23252F"
+                    BorderBrush="#3A3D4A"
+                    BorderThickness="0,0,1,0">
+                <DockPanel>
+                    <Border DockPanel.Dock="Top"
+                            Background="#1A1C24"
+                            Padding="8,6"
+                            BorderBrush="#3A3D4A"
+                            BorderThickness="0,0,0,1">
+                        <TextBlock Text="Components" FontWeight="SemiBold" Foreground="#B0B8D0"/>
+                    </Border>
+                    <TreeView ItemsSource="{Binding RootNodes}"
+                              SelectedItem="{Binding SelectedNode}"
+                              Background="Transparent"
+                              Margin="4">
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children}"
+                                              x:DataType="models:ComponentNode">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <CheckBox IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DockPanel>
+            </Border>
+
+            <!-- Center panel — custom canvas -->
+            <controls:MainCanvasControl Grid.Column="1"/>
+
+            <!-- Right panel — properties / details -->
+            <Border Grid.Column="2"
+                    Background="#23252F"
+                    BorderBrush="#3A3D4A"
+                    BorderThickness="1,0,0,0">
+                <DockPanel>
+                    <Border DockPanel.Dock="Top"
+                            Background="#1A1C24"
+                            Padding="8,6"
+                            BorderBrush="#3A3D4A"
+                            BorderThickness="0,0,0,1">
+                        <TextBlock Text="Properties" FontWeight="SemiBold" Foreground="#B0B8D0"/>
+                    </Border>
+                    <ScrollViewer Margin="8">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="{Binding SelectedNodeInfo}"
+                                       Foreground="#A0A8C0"
+                                       TextWrapping="Wrap"/>
+                            <Separator/>
+                            <TextBlock Text="Name:" Foreground="#707888" FontSize="12"/>
+                            <TextBox IsReadOnly="True"
+                                     Text="{Binding SelectedNode.Name}"
+                                     PlaceholderText="(none)"
+                                     Background="#1A1C24"/>
+                            <TextBlock Text="Status:" Foreground="#707888" FontSize="12"/>
+                            <TextBlock Text="Placeholder — no data yet"
+                                       Foreground="#505868"
+                                       FontStyle="Italic"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!--  ROW 2 — Bottom panel (Logs / Timeline tabs)        -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <Border Grid.Row="2"
+                BorderBrush="#3A3D4A"
+                BorderThickness="0,1,0,0">
+            <TabControl Background="#1A1C24">
+                <TabItem Header="Logs">
+                    <ListBox Background="Transparent" Margin="4">
+                        <ListBoxItem Foreground="#606878">[INFO]  Application started.</ListBoxItem>
+                        <ListBoxItem Foreground="#606878">[INFO]  UI scaffold loaded.</ListBoxItem>
+                        <ListBoxItem Foreground="#506858">[DEBUG] Canvas initialised with 3 demo modules.</ListBoxItem>
+                        <ListBoxItem Foreground="#606878">[INFO]  Waiting for user interaction…</ListBoxItem>
+                    </ListBox>
+                </TabItem>
+                <TabItem Header="Timeline">
+                    <TextBlock Text="Timeline — placeholder (no data yet)"
+                               Foreground="#505868"
+                               FontStyle="Italic"
+                               Margin="12"
+                               VerticalAlignment="Center"/>
+                </TabItem>
+            </TabControl>
+        </Border>
+
+    </Grid>
+</Window>
